@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('title',300)->require();
             $table->text('content')->require();
-            $table->string('author_name',150);
+            $table->string('author_name',150)->nullable();
             $table->timestamps();
         });
     }

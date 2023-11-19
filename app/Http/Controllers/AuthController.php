@@ -98,12 +98,15 @@ class AuthController extends Controller
 
 
 
-    public function logout(Request $request)
+    public function logout($id)
     {
 
         //revoking the token to logout the user
         try {
-            $request->user()->tokens()->delete();
+
+            $user = User::find($id);
+
+            $user->tokens()->delete();
 
             return response()->json([
                 'success' => true,

@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\NewPostCreated;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
+use Illuminate\Support\Facades\Mail;
 
 class PostController extends Controller
 {
@@ -30,12 +33,16 @@ class PostController extends Controller
                 'content' => 'required|string',
             ]);
 
-            // Create a new post
-            $post = Post::create([
-                'title' => $request->input('title'),
-                'content' => $request->input('content'),
-                'author_name' => Auth::name(),
-            ]);
+            $authorName = Auth::check() ? Auth::user()->name : User::find($request->input('id'))->name;
+
+        // Create a new post
+        $post = Post::create([
+            'title' => $request->input('title'),
+            'content' => $request->input('content'),
+            'author_name' => $authorName,
+        ]);
+
+            // Mail::to(Auth::user()->email)->send(new NewPostCreated($post));
 
             return response()->json([
                 'success' => true,
